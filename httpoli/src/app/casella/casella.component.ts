@@ -12,6 +12,8 @@ import { Observable } from 'rxjs';
 export class CasellaComponent implements OnInit  {
   observPrenotazioneArray !: Observable<Prenotazione[]>;
   prenotazioni : Prenotazione[] = [];
+  prenotazioneSelezionata !:Prenotazione;
+  selezionata: boolean = false;
   
   constructor(public http: HttpClient) {}
   ngOnInit(): void {
@@ -22,5 +24,10 @@ export class CasellaComponent implements OnInit  {
   {
     this.observPrenotazioneArray = this.http.get<Prenotazione[]>('https://my-json-server.typicode.com/PolisenoRiccardo/fakeServer/prenotazioni');
     this.observPrenotazioneArray.subscribe(prenotazioni => {this.prenotazioni = prenotazioni;});
+  }
+
+  selezione(prenotazione: Prenotazione) {
+    this.prenotazioneSelezionata = prenotazione;
+    this.selezionata = true;
   }
 }
