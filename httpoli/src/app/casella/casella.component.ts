@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Prenotazione } from '../prenotazione.model';
 import { Observable } from 'rxjs';
 
@@ -11,9 +11,12 @@ import { Observable } from 'rxjs';
 })
 export class CasellaComponent implements OnInit  {
   observPrenotazioneArray !: Observable<Prenotazione[]>;
+  observPrenotazione!: Observable<Prenotazione>;
   prenotazioni : Prenotazione[] = [];
   prenotazioneSelezionata !:Prenotazione;
   selezionata: boolean = false;
+
+  @Input() postPrenotazione!: Prenotazione;
   
   constructor(public http: HttpClient) {}
   ngOnInit(): void {
@@ -30,4 +33,14 @@ export class CasellaComponent implements OnInit  {
     this.prenotazioneSelezionata = prenotazione;
     this.selezionata = true;
   }
+
+  makePost(): void
+  {
+    let posted = JSON.stringify(Prenotazione);
+    const headers = {'Content-Type': 'application/json', 'My-Custom-Header': 'foobar' };
+    this.observPrenotazione = this.http.post<Prenotazione>("https://my-json-server.typicode.com/PolisenoRiccardo/fakeServer/prenotazioni", posted, {headers});
+    this.observPrenotazione.subscribe(postPrenotazione => {this.postPrenotazione = postPrenotazione;});
+    this.prenotazioni.push(this.postPrenotazione)
+  }
+
 }
